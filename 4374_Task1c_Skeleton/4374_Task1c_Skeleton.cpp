@@ -31,10 +31,10 @@ const char HOLE('O');						//hole
 const char PILL('*');						//pill
 const char ZOMBIE('Z');						//Zombie
 //defining the command letters to move spot on the maze
-const int  UP(72);							//up arrow
-const int  DOWN(80);						//down arrow
-const int  RIGHT(77);						//right arrow
-const int  LEFT(75);						//left arrow
+const int  UP(72);							//up arrow (h)
+const int  DOWN(80);						//down arrow (p)
+const int  RIGHT(77);						//right arrow (m)
+const int  LEFT(75);						//left arrow (k)
 //defining the other command letters
 const char PLAY('P');						//play the game
 const char QUIT('Q');						//end the game
@@ -43,6 +43,8 @@ const char BACK('\r');						//go back
 const char EXTERMINATE('X');				//kill all zombies
 const char FREEZE('F');						//freeze all zombies
 const char EAT('E');						//eat all the pills
+const char SAVE('S');						//save game
+const char LOAD('L');						//load game
 
 //data structure to store data for a grid item
 struct Item
@@ -530,10 +532,12 @@ bool outOfZombies(vector<Item> zombies)
 	}
 	return(counter == zombies.size() );
 }//end outOfZombies
+
 bool outOfPills(int pillsremaining)
 {
 	return(pillsremaining == 0);//if there are pills return false, else return true
 }//end of outOfPills
+
 //---------------------------------------------------------------------------
 //----- display info on screen
 //---------------------------------------------------------------------------
@@ -780,9 +784,7 @@ void showHelp()
 	Gotoxy(10, 15);
 	cout << " WHEN THE GAME ENDS ";
 }
-/*
-YOUR SCORE IS THE NUMBER OF LIVES LEFT WHEN THE GAME ENDS
-*/
+
 void endProgram(int lives, int key, vector<Item> zombies, int pillsRemaining, string name, int highscore)
 { //end program with appropriate 
 	void writeToSaveFile(string name, int lives, int highscore);
@@ -816,6 +818,7 @@ void displayExit()
 	Gotoxy(40, 14);
 	cout << " ";
 }
+
 void removePill(vector<Item>& pills, Item sp, string& message, int& pillsRemaining)
 {
 	for (int i = 0; i < pills.size(); i++)					//for every pill
@@ -840,6 +843,7 @@ string getPlayerName()
 	}
 	return(name);
 }
+
 int getPlayerScore(string name)
 {
 	int highScore = 0; //Where the players highest score will be stored
@@ -868,6 +872,7 @@ int getPlayerScore(string name)
 	
 	return(highScore); //return the value of highest score
 }
+
 void writeToSaveFile(string name, int lives, int highscore)
 {
 	ofstream toFile;
@@ -885,6 +890,7 @@ void writeToSaveFile(string name, int lives, int highscore)
 	}
 	toFile.close();
 }//end of writeToSaveFile
+
 void cheats(int& lives, vector<Item>& zombies, vector<Item>& pills, int key, bool& frozen)
 {
 	if (toupper(key) == EAT)
