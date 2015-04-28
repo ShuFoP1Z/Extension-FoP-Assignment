@@ -118,10 +118,9 @@ void playGame(string playerName)
 	void endProgram(int lives, int key, vector<Item> zombies, int pillsRemaining, string name, int highscore);
 	int getPlayerScore(string name);
 	void cheats(int& lives, vector<Item>& zombies, vector<Item>& pills, int key, bool& frozen);
-	void saveGame(const char grid[SIZEY][SIZEX], string name, int lives);
-	void loadGame(char grid[SIZEY][SIZEX], string name, int lives);
-	//void clearGrid(char grid[SIZEY][SIZEX]);
-	void setGrid(char grid[][SIZEX]);
+	void saveGame(const char grid[SIZEY][SIZEX], string& name, int& lives);
+	void loadGame(char grid[SIZEY][SIZEX], string& name, int lives);
+	void updateAllCoordinates(const char grid[][SIZEX], Item spot, vector<Item> pills, vector<Item> zombies, vector<Item> holes);
 
 	//local variable declarations 
 	char grid[SIZEY][SIZEX];								//grid for display
@@ -130,20 +129,17 @@ void playGame(string playerName)
 	const int highscore = getPlayerScore(playerName);		//get the players highest score
 	Item spot = { SPOT };									//Spot's symbol and position (0, 0) 
 	Item hole = { HOLE };									//Hole's symbol and position (0, 0)
-	bool frozen(false);
-
 	Item pill = { PILL };									//Pill's symbol and position (0, 0)
+	Item zombie = { ZOMBIE };								//Zombies symbol and position (0, 0)
+	bool frozen(false);
 	vector <Item> holes(12, hole);							//Creates a vector of holes, with each element being initialised as hole 
 	vector <Item> pills(5, pill);							//Creates a vector of pills, with each element being initialised as pills
-	Item zombie = { ZOMBIE };								//Zombies symbol and position (0, 0)
-	vector<Item> zombies(4, zombie);				     	//Initialise a vector of zombies, each element will be initialised as zombie
-
+	vector <Item> zombies(4, zombie);				     	//Initialise a vector of zombies, each element will be initialised as zombie
 	string message("         LET'S START...          ");	//current message to player
 
 	bool running = true;
 
 	//action...
-
 	initialiseGame(grid, spot, holes, pills, zombies);		//initialise grid (incl. walls and spot)
 
 	int key(' ');											//create key to store keyboard events
@@ -160,13 +156,13 @@ void playGame(string playerName)
 		}
 		if (toupper(key) == LOAD)
 		{
-			setGrid(grid);
 			loadGame(grid, playerName, lives);
+			updateAllCoordinates(grid, spot, holes, pills, zombies);
 			message = "          LOADED GAME!           ";
 		}
 		else
 			message = "          INVALID KEY!           ";	//set 'Invalid key' message
-		cheats(lives, zombies, pills, key, frozen);			//see if there are cheats
+		//cheats(lives, zombies, pills, key, frozen);			//see if there are cheats
 		if (wantToQuit(key))								//if player wants to quit
 			running = false;
 		if (outOfLives(lives))								//if player is out of lives
@@ -379,7 +375,7 @@ void updateSpotCoordinates(const char g[][SIZEX], Item& sp, int key, int& lives,
 		sp.x += dx;							//go in that X direction
 		break;
 	case WALL:								//hit a wall and stay there
-		std::cout << '\a';						//beep the alarm
+		std::cout << '\a';					//beep the alarm
 		mess = "       CANNOT GO THERE...        ";
 		break;
 	}
@@ -928,7 +924,7 @@ void cheats(int& lives, vector<Item>& zombies, vector<Item>& pills, int key, boo
 	}
 }
 
-void saveGame(const char grid[SIZEY][SIZEX], string name, int lives)
+void saveGame(const char grid[SIZEY][SIZEX], string& name, int& lives)
 {
 	ofstream toFile;
 	toFile.open((name + SAVEEXTENSION), ios::out);
@@ -949,7 +945,7 @@ void saveGame(const char grid[SIZEY][SIZEX], string name, int lives)
 	toFile.close();
 }
 
-void loadGame(char grid[SIZEY][SIZEX], string name, int lives)
+void loadGame(char grid[SIZEY][SIZEX], string& name, int lives)
 {
 	ifstream fromFile;
 	char nextChar;
@@ -969,4 +965,19 @@ void loadGame(char grid[SIZEY][SIZEX], string name, int lives)
 		}
 	}
 	fromFile.close();
+}
+
+void updateAllCoordinates(const char grid[][SIZEX], Item spot, vector<Item> pills, vector<Item> zombies, vector<Item> holes)
+{
+	for (int row(0); row < SIZEY; ++row)
+	{
+		for (int col(0); col < SIZEX; ++col)
+		{
+			switch (grid[row][col])
+			case SPOT:
+				spot.x = col;
+				spot.y = row;
+				break;
+			case HOLE:
+
 }
