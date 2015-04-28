@@ -436,6 +436,7 @@ void updateZombieCoordinates(const char g[][SIZEX], vector<Item>& zombies, Item 
 				{
 					dy = 0; //set dy to 0 
 				}
+				
 				const int targetX(zombies[i].x + dx); //Set the target destination of the zombie's x to it's x position + the new change
 				const int targetY(zombies[i].y + dy);//Set the target destination of the zombie's y to it's y position + the new change
 
