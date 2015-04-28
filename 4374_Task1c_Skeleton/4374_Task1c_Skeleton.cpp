@@ -60,17 +60,19 @@ int main()
 	//function declarations (prototypes)
 	int  getKeyPress();
 	bool wantToQuit(int k);
-	void playGame(string playerName);
+	void playGame(string playerName, int difficulty);
 	void displayMenu();
 	void displayInfo();
 	void displayExit();
 	string getPlayerName();
+	int getDificulty();
 
 	//local variable declarations 
 	bool running = true;									//to exit the game
 	bool back = false;										//to get back to the menu
 	int key(' ');											//create key to store keyboard events
 	string playerName;
+	int difficulty;
 	//menu
 	do {
 		displayMenu();										//display the main menu
@@ -78,7 +80,8 @@ int main()
 		//game
 		if (toupper(key) == PLAY){
 			playerName = getPlayerName();
-			playGame(playerName);
+			difficulty = getDificulty();
+			playGame(playerName, difficulty);
 		}//quit
 		if (wantToQuit(key))
 		{
@@ -101,7 +104,7 @@ int main()
 	return 0;
 } //end main
 
-void playGame(string playerName)
+void playGame(string playerName, int difficulty)
 {
 	//function declarations (prototypes)
 	void initialiseGame(char grid[][SIZEX], Item& spot, vector<Item>& holes, vector<Item>& pills, vector<Item>& zombies);
@@ -121,18 +124,18 @@ void playGame(string playerName)
 	//local variable declarations 
 	char grid[SIZEY][SIZEX];								//grid for display
 	int lives(3);											//The number of lives spot has
-	int pillsRemaining(5);									//The number of pills still being shown
+	
 	const int highscore = getPlayerScore(playerName);					//get the players highest score
 	Item spot = { SPOT };									//Spot's symbol and position (0, 0) 
 	Item hole = { HOLE };									//Hole's symbol and position (0, 0)
 	bool frozen(false);
 
 	Item pill = { PILL };									//Pill's symbol and position (0, 0)
-	vector <Item> holes(12, hole);							//Creates a vector of holes, with each element being initialised as hole 
-	vector <Item> pills(5, pill);							//Creates a vector of pills, with each element being initialised as pills
+	vector <Item> holes(difficulty * 4, hole);							//Creates a vector of holes, with each element being initialised as hole 
+	vector <Item> pills(difficulty * 4, pill);							//Creates a vector of pills, with each element being initialised as pills
 	Item zombie = { ZOMBIE };								//Zombies symbol and position (0, 0)
 	vector<Item> zombies(4, zombie);				     	//Initialise a vector of zombies, each element will be initialised as zombie
-
+	int pillsRemaining(pills.size());									//The number of pills still being shown
 	string message("         LET'S START...          ");	//current message to player
 
 	bool running = true;
@@ -907,4 +910,13 @@ void cheats(int& lives, vector<Item>& zombies, vector<Item>& pills, int key, boo
 		else
 			frozen = false;
 	}
+}
+
+int getDificulty()
+{
+	int difficult;
+	Gotoxy(10, 17);
+	cout << "Please enter the difficulty - 3 : Easy 2 : Normal : 1 Hard - ";
+	cin >> difficult;
+	return difficult;
 }
