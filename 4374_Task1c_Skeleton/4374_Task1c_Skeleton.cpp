@@ -273,6 +273,8 @@ void setZombieInitialCoordinates(vector<Item>& zombies)
 
 void setGrid(char grid[][SIZEX])
 { //reset the empty grid configuration
+	void readGridFromFile(char grid[][SIZEX]);
+	/*
 	for (int row(0); row < SIZEY; ++row)				//for each column
 	{
 		for (int col(0); col < SIZEX; ++col)			//for each col
@@ -286,8 +288,39 @@ void setGrid(char grid[][SIZEX])
 					grid[row][col] = TUNNEL;			//draw a space
 		} //end of row-loop
 	} //end of col-loop
+	*/
+	readGridFromFile(grid);
+	for (int i = 0; i < SIZEY; ++i)
+	{
+		for (int j = 0; j < SIZEX; ++j)
+		{
+			if (grid[i][j] == 't')
+				grid[i][j] = TUNNEL;
+		}
+	}
 } //end of setGrid
-
+void readGridFromFile(char grid[][SIZEX])
+{
+	ifstream fromFile; 
+	fromFile.open("walls.txt", ios::in);
+	if (fromFile.fail())
+	{
+		cout << "Failed to read in walls";
+	}
+	else
+	{
+		for (int i = 0; i < SIZEY; ++i)
+		{
+			for (int j = 0; j < SIZEX; ++j)
+			{
+				fromFile >> grid[i][j];
+			}
+		}
+		
+	}
+	fromFile.close();
+	return;
+}
 void placeSpot(char gr[][SIZEX], Item spot)
 { //place spot at its new position in grid
 	gr[spot.y][spot.x] = spot.symbol;
