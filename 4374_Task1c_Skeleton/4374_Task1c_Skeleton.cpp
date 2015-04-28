@@ -9,7 +9,6 @@
 #include <vector>							//for vectors
 #include <fstream>							//for ofstream & ifstream
 
-
 //include our own libraries
 #include "RandomUtils.h"					//for Seed, Random
 #include "ConsoleUtils.h"					//for Clrscr, Gotoxy, etc.
@@ -23,6 +22,7 @@ using namespace std;
 const int SIZEY(12);						//vertical dimension
 const int SIZEX(20);						//horizontal dimension
 const string EXTENSION = ".scr";			//file extension for the playerscore
+const string SAVEEXTENSION = ".sav";
 //defining symbols used for display of the grid and content
 const char SPOT('@');						//spot
 const char TUNNEL(' ');						//open space
@@ -115,16 +115,19 @@ void playGame(string playerName)
 	int  getKeyPress();
 	void updateGame(char g[][SIZEX], Item& sp, vector<Item> holes, int k, int& lives, string& mess, vector<Item>& pills, int& pillsRemaining, vector<Item>& zombies, bool frozen);
 	void renderGame(const char g[][SIZEX], string mess, int lives, string playerName, int highScore);
-	void endProgram(int lives, int key, vector<Item> zombies, int pillsRemaining ,string name, int highscore);
+	void endProgram(int lives, int key, vector<Item> zombies, int pillsRemaining, string name, int highscore);
 	int getPlayerScore(string name);
 	void cheats(int& lives, vector<Item>& zombies, vector<Item>& pills, int key, bool& frozen);
-
+	void saveGame(const char grid[SIZEY][SIZEX], string name, int lives);
+	void loadGame(char grid[SIZEY][SIZEX], string name, int lives);
+	//void clearGrid(char grid[SIZEY][SIZEX]);
+	void setGrid(char grid[][SIZEX]);
 
 	//local variable declarations 
 	char grid[SIZEY][SIZEX];								//grid for display
 	int lives(3);											//The number of lives spot has
 	int pillsRemaining(5);									//The number of pills still being shown
-	const int highscore = getPlayerScore(playerName);					//get the players highest score
+	const int highscore = getPlayerScore(playerName);		//get the players highest score
 	Item spot = { SPOT };									//Spot's symbol and position (0, 0) 
 	Item hole = { HOLE };									//Hole's symbol and position (0, 0)
 	bool frozen(false);
@@ -150,6 +153,17 @@ void playGame(string playerName)
 		key = getKeyPress();								//read in next keyboard event
 		if (isArrowKey(key))
 			updateGame(grid, spot, holes, key, lives, message, pills, pillsRemaining, zombies, frozen);
+		if (toupper(key) == SAVE)
+		{
+			saveGame(grid, playerName, lives);
+			message = "           SAVED GAME!           ";
+		}
+		if (toupper(key) == LOAD)
+		{
+			setGrid(grid);
+			loadGame(grid, playerName, lives);
+			message = "          LOADED GAME!           ";
+		}
 		else
 			message = "          INVALID KEY!           ";	//set 'Invalid key' message
 		cheats(lives, zombies, pills, key, frozen);			//see if there are cheats
@@ -907,10 +921,52 @@ void cheats(int& lives, vector<Item>& zombies, vector<Item>& pills, int key, boo
 
 	if (toupper(key) == FREEZE)
 	{
-
 		if (frozen == false)
 			frozen = true;
 		else
 			frozen = false;
 	}
+}
+
+void saveGame(const char grid[SIZEY][SIZEX], string name, int lives)
+{
+	ofstream toFile;
+	toFile.open((name + SAVEEXTENSION), ios::out);
+
+	if (toFile.fail())
+		cout << "ERROR! Unable to write save file!";
+	else
+	{
+		toFile << lives;
+		for (int row(0); row < SIZEY; ++row)		//for each row (vertically)
+		{
+			for (int col(0); col < SIZEX; ++col)	//for each column (horizontally)
+			{
+				toFile << grid[row][col];
+			}
+		}
+	}
+	toFile.close();
+}
+
+void loadGame(char grid[SIZEY][SIZEX], string name, int lives)
+{
+	ifstream fromFile;
+	char nextChar;
+	fromFile.open((name + SAVEEXTENSION), ios::out);
+
+	if (fromFile.fail())
+		cout << "ERROR! Unable to read save file!";
+	else
+	{
+		fromFile >> lives;
+		for (int row(0); row < SIZEY; ++row)
+		{
+			for (int col(0); col < SIZEX; ++col)
+			{
+					grid[row][col] = fromFile.get();
+			}
+		}
+	}
+	fromFile.close();
 }
