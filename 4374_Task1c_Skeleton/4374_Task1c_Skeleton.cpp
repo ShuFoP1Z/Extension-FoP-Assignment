@@ -22,6 +22,7 @@ using namespace std;
 //defining the size of the grid
 const int SIZEY(12);						//vertical dimension
 const int SIZEX(20);						//horizontal dimension
+const int MAX_HIGHSCORES(6);				//max number of high scores
 const string EXTENSION = ".scr";			//file extension for the playerscore
 //defining symbols used for display of the grid and content
 const char SPOT('@');						//spot
@@ -43,7 +44,7 @@ const char BACK('\r');						//go back
 const char EXTERMINATE('X');				//kill all zombies
 const char FREEZE('F');						//freeze all zombies
 const char EAT('E');						//eat all the pills
-
+const char BESTSCORES('B');
 //data structure to store data for a grid item
 struct Item
 {
@@ -119,10 +120,12 @@ void playGame(string playerName, int difficulty)
 	void endProgram(int lives, int key, vector<Item> zombies, int pillsRemaining ,string name, int highscore);
 	int getPlayerScore(string name);
 	void cheats(int& lives, vector<Item>& zombies, vector<Item>& pills, int key, bool& frozen, int& pillsRemaining, bool& exterminate);
-
+	void getHighScoresList(string names[], int scores[]);
 
 	//local variable declarations 
 	char grid[SIZEY][SIZEX];								//grid for display
+	string highscoreNames[MAX_HIGHSCORES];
+	int highscoresNumbers[MAX_HIGHSCORES];
 	int lives(3);											//The number of lives spot has
 	
 	const int highscore = getPlayerScore(playerName);					//get the players highest score
@@ -946,7 +949,25 @@ void cheats(int& lives, vector<Item>& zombies, vector<Item>& pills, int key, boo
 			frozen = false;
 	}
 }
+void getHighScoresList(string names[], int scores[])
+{
+	ifstream fromFile;
+	
+	fromFile.open("bestScores.txt", ios::in);
 
+	if (fromFile.fail())
+	{
+		cout << "ERROR! Failed to open bestScores.txt";
+	}
+	else
+	{
+		for (int i = 0; i < MAX_HIGHSCORES; ++i)
+		{
+			if (!fromFile.eof())
+				fromFile >> names[i] >> scores[i];
+		}
+	}
+}//end of getHighScoresList
 int getDificulty()
 {
 	int difficult;
