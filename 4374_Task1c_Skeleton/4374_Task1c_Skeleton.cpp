@@ -78,7 +78,8 @@ int main()
 		displayMenu();										//display the main menu
 		key = getKeyPress();								//read in next keyboard event
 		//game
-		if (toupper(key) == PLAY){
+		if (toupper(key) == PLAY)
+		{
 			playerName = getPlayerName();
 			playGame(playerName);
 		}//quit
@@ -112,16 +113,17 @@ void playGame(string playerName)
 	bool outOfLives(int lives);
 	bool outOfZombies(vector<Item> zombies);
 	bool outOfPills(int pillsRemaining);
+	bool checkForSaveGame(string name);
 	int  getKeyPress();
 	void updateGame(char g[][SIZEX], Item& sp, vector<Item> holes, int k, int& lives, string& mess, vector<Item>& pills, int& pillsRemaining, vector<Item>& zombies, bool frozen);
 	void renderGame(const char g[][SIZEX], string mess, int lives, string playerName, int highScore);
 	void endProgram(int lives, int key, vector<Item> zombies, int pillsRemaining, string name, int highscore);
 	int getPlayerScore(string name);
 	void cheats(int& lives, vector<Item>& zombies, vector<Item>& pills, int key, bool& frozen);
-	void saveGame(const char grid[SIZEY][SIZEX], string& name, int& lives);
-	void loadGame(char grid[SIZEY][SIZEX], string& name, int lives);
-	void updateAllCoordinates(const char grid[][SIZEX], Item spot, vector<Item> pills, vector<Item> zombies, vector<Item> holes);
-
+	string saveGame(const char grid[SIZEY][SIZEX], string& name, int& lives);
+	string loadGame(char grid[SIZEY][SIZEX], string& name, int lives);
+	void updateAllCoordinates(const char grid[SIZEY][SIZEX], Item& spot, vector<Item>& pills, vector<Item>& zombies, vector<Item>& holes);
+	
 	//local variable declarations 
 	char grid[SIZEY][SIZEX];								//grid for display
 	int lives(3);											//The number of lives spot has
@@ -140,7 +142,13 @@ void playGame(string playerName)
 	bool running = true;
 
 	//action...
-	initialiseGame(grid, spot, holes, pills, zombies);		//initialise grid (incl. walls and spot)
+	if (!checkForSaveGame(playerName))
+		initialiseGame(grid, spot, holes, pills, zombies);		//initialise grid (incl. walls and spot)
+	else
+	{
+		message = loadGame(grid, playerName, lives);
+		updateAllCoordinates(grid, spot, holes, pills, zombies);
+	}
 
 	int key(' ');											//create key to store keyboard events
 	do {
@@ -150,15 +158,11 @@ void playGame(string playerName)
 		if (isArrowKey(key))
 			updateGame(grid, spot, holes, key, lives, message, pills, pillsRemaining, zombies, frozen);
 		if (toupper(key) == SAVE)
-		{
-			saveGame(grid, playerName, lives);
-			message = "           SAVED GAME!           ";
-		}
+			message = saveGame(grid, playerName, lives);
 		if (toupper(key) == LOAD)
 		{
-			loadGame(grid, playerName, lives);
+			message = loadGame(grid, playerName, lives);
 			updateAllCoordinates(grid, spot, holes, pills, zombies);
-			message = "          LOADED GAME!           ";
 		}
 		else
 			message = "          INVALID KEY!           ";	//set 'Invalid key' message
@@ -639,16 +643,16 @@ void showPlayerScore(string playerName, int highScore)
 	SelectTextColour(clCyan);
 	Gotoxy(10, 17);
 	cout << " NAME - " << playerName << " ";
-	Gotoxy(40, 17);
+	Gotoxy(10, 18);
 	cout << " SCORE - " << highScore << " ";
 }
 void showMessage(string m, int lives)
 { //print auxiliary messages if any
 	SelectBackColour(clDarkCyan);
 	SelectTextColour(clGreen);
-	Gotoxy(40, 13);
+	Gotoxy(40, 17);
 	cout << "      You have " << lives << " lives left      ";
-	Gotoxy(40, 14);
+	Gotoxy(40, 18);
 	cout << m;	//display current message
 } //end of showMessage
 
@@ -656,7 +660,7 @@ void clearMessage()
 { //clear message area on screen
 	SelectBackColour(clDarkCyan);
 	SelectTextColour(clGreen);
-	Gotoxy(40, 14);
+	Gotoxy(40, 18);
 	string str(33, ' ');
 	cout << str;								//display blank message
 } //end of setMessage
@@ -746,13 +750,20 @@ void showOptions()
 	Gotoxy(40, 7);
 	cout << "                                 ";
 	Gotoxy(40, 8);
-	cout << " MOVE USING THE ARROW KEYS       ";
+	cout << " PRESS S TO SAVE YOUR GAME       ";
 	Gotoxy(40, 9);
-	cout << " PRESS F TO FREEZE THE ZOMBIES   ";
+	cout << " PRESS L TO LOAD A SAVED GAME    ";
 	Gotoxy(40, 10);
-	cout << " PRESS X TO KILL ALL ZOMBIES     ";
+	cout << "                                 ";
 	Gotoxy(40, 11);
+	cout << " MOVE USING THE ARROW KEYS       ";
+	Gotoxy(40, 12);
+	cout << " PRESS F TO FREEZE THE ZOMBIES   ";
+	Gotoxy(40, 13);
+	cout << " PRESS X TO KILL ALL ZOMBIES     ";
+	Gotoxy(40, 14);
 	cout << " PRESS E TO EAT ALL THE PILLS    ";
+
 } //end of showOptions
 
 void showGameOptions()
@@ -772,6 +783,12 @@ void showGameOptions()
 	Gotoxy(40, 10);
 	cout << " PRESS E TO EAT ALL THE PILLS    ";
 	Gotoxy(40, 11);
+	cout << "                                 ";
+	Gotoxy(40, 12);
+	cout << " PRESS S TO SAVE YOUR GAME       ";
+	Gotoxy(40, 13);
+	cout << " PRESS L TO LOAD A SAVED GAME    ";
+	Gotoxy(40, 14);
 	cout << " PRESS Q TO QUIT THE GAME        ";
 } //end of showGameOptions
 
@@ -800,21 +817,18 @@ void endProgram(int lives, int key, vector<Item> zombies, int pillsRemaining, st
 	void writeToSaveFile(string name, int lives, int highscore);
 	SelectBackColour(clBlack);
 	SelectTextColour(clYellow);
-	Gotoxy(40, 13);
-
+	Gotoxy(40, 17);
 	if (outOfLives(lives))
 		cout << "            YOU LOST!            ";
 	if (wantToQuit(key))
 		cout << "          PLAYER QUITS!          ";
 	if (outOfZombies(zombies) && outOfPills(pillsRemaining))
-	{
 		cout << "         ALL ZOMBIES DIED!	      ";
-	}
 	writeToSaveFile(name, lives, highscore);
 
 	//If zombies are not being rendered
 	//hold output screen until a keyboard key is hit
-	Gotoxy(40, 14);
+	Gotoxy(40, 18);
 	cout << " ";
 	system("pause");
 } //end of endProgram
@@ -852,6 +866,22 @@ string getPlayerName()
 		name.erase(i);
 	}
 	return(name);
+}
+
+bool checkForSaveGame(string name)
+{
+	ifstream saveFile;
+	saveFile.open((name + SAVEEXTENSION));
+	if (saveFile.fail())
+		return false;
+	else
+	{
+		char response;
+		Gotoxy(10, 18);
+		cout << "Would you like to load a previous save? Y/N - ";
+		cin >> response;
+		return (toupper(response) == 'Y');
+	}
 }
 
 int getPlayerScore(string name)
@@ -924,13 +954,15 @@ void cheats(int& lives, vector<Item>& zombies, vector<Item>& pills, int key, boo
 	}
 }
 
-void saveGame(const char grid[SIZEY][SIZEX], string& name, int& lives)
+string saveGame(const char grid[SIZEY][SIZEX], string& name, int& lives)
 {
 	ofstream toFile;
 	toFile.open((name + SAVEEXTENSION), ios::out);
 
 	if (toFile.fail())
-		cout << "ERROR! Unable to write save file!";
+	{
+		return(" ERROR! CAN'T WRITE TO SAVE FILE ");
+	}
 	else
 	{
 		toFile << lives;
@@ -941,18 +973,21 @@ void saveGame(const char grid[SIZEY][SIZEX], string& name, int& lives)
 				toFile << grid[row][col];
 			}
 		}
+		toFile.close();
+		return("           SAVED GAME!           ");
 	}
-	toFile.close();
 }
 
-void loadGame(char grid[SIZEY][SIZEX], string& name, int lives)
+string loadGame(char grid[SIZEY][SIZEX], string& name, int lives)
 {
 	ifstream fromFile;
 	char nextChar;
 	fromFile.open((name + SAVEEXTENSION), ios::out);
 
 	if (fromFile.fail())
-		cout << "ERROR! Unable to read save file!";
+	{
+		return(" ERROR! UNABLE TO READ SAVE FILE ");
+	}
 	else
 	{
 		fromFile >> lives;
@@ -963,21 +998,42 @@ void loadGame(char grid[SIZEY][SIZEX], string& name, int lives)
 					grid[row][col] = fromFile.get();
 			}
 		}
+		fromFile.close();
+		return("          LOADED GAME!           ");
 	}
-	fromFile.close();
 }
 
-void updateAllCoordinates(const char grid[][SIZEX], Item spot, vector<Item> pills, vector<Item> zombies, vector<Item> holes)
+void updateAllCoordinates(const char grid[SIZEY][SIZEX], Item& spot, vector<Item>& pills, vector<Item>& zombies, vector<Item>& holes)
 {
+	int h(0), p(0), z(0);
 	for (int row(0); row < SIZEY; ++row)
 	{
 		for (int col(0); col < SIZEX; ++col)
 		{
-			switch (grid[row][col])
+			switch (grid[row][col]) {
 			case SPOT:
 				spot.x = col;
 				spot.y = row;
 				break;
 			case HOLE:
-
+				holes[h].x = col;
+				holes[h].y = row;
+				if (h < holes.size())
+					++h;
+				break;
+			case PILL:
+				pills[p].x = col;
+				pills[p].y = row;
+				if (p < pills.size())
+					++p;
+				break;
+			case ZOMBIE:
+				zombies[z].x = col;
+				zombies[z].y = row;
+				if (z < zombies.size())
+					++z;
+				break;
+			}
+		}
+	}
 }
