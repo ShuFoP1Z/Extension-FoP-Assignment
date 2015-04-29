@@ -961,25 +961,30 @@ void writeToBestScores(string playerName, int lives, string highscoreNames[], in
 	}
 	else
 	{
-		if (index == 0)
+		if (index == 0)//if the index of the players score is 0
 		{
+			//place the player at the top of the array
 			tempNames[0] = playerName; 
 			tempScores[0] = lives * 13;
+
 			for (int i = 1; i < MAX_HIGHSCORES; ++i)
-			{
+			{	//loop through and place all scores from the original array into the temp array 1 below their old position
 				tempNames[i] = highscoreNames[i - 1];
 				tempScores[i] = highscoreNumbers[i - 1];
 			}
 		}
 		else
 		{
+			//place everything above player above
 			for (int i = 0; i < index; ++i)
 			{
 				tempNames[i] = highscoreNames[i];
 				tempScores[i] = highscoreNumbers[i];
 			}
+			//place the player in the array 
 			tempNames[index] = playerName;
 			tempScores[index] = lives * 13;
+			//place everything below the player in the array
 			for (int i = index + 1; i < MAX_HIGHSCORES; ++i)
 			{
 				if (i + 1 < MAX_HIGHSCORES)
@@ -988,11 +993,14 @@ void writeToBestScores(string playerName, int lives, string highscoreNames[], in
 				}
 			}
 
+			//write this to file
+			for (int i = 0; i < MAX_HIGHSCORES; ++i)
+			{
+				toFile << tempNames[i] << " " << tempScores[i] << endl;
+			}
+
 		}
-		for (int i = 0; i < MAX_HIGHSCORES; ++i)
-		{
-			toFile << tempNames[i] << " " << tempScores[i] << endl;
-		}
+
 	toFile.close();
 
 	return;
