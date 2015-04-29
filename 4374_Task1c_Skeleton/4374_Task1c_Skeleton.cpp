@@ -115,7 +115,7 @@ void playGame(string playerName, int difficulty)
 	bool outOfPills(int pillsRemaining);
 	int  getKeyPress();
 	void updateGame(char g[][SIZEX], Item& sp, vector<Item> holes, int k, int& lives, string& mess, vector<Item>& pills, int& pillsRemaining, vector<Item>& zombies, bool frozen, int& protection);
-	void renderGame(const char g[][SIZEX], string mess, int lives, string playerName, int highScore);
+	void renderGame(const char g[][SIZEX], string mess, int lives, string playerName, int highScore, int protection);
 	void endProgram(int lives, int key, vector<Item> zombies, int pillsRemaining ,string name, int highscore);
 	int getPlayerScore(string name);
 	void cheats(int& lives, vector<Item>& zombies, vector<Item>& pills, int key, bool& frozen, int& pillsRemaining, bool& exterminate);
@@ -147,7 +147,7 @@ void playGame(string playerName, int difficulty)
 
 	int key(' ');											//create key to store keyboard events
 	do {
-		renderGame(grid, message, lives, playerName, highscore);					//render game state on screen
+		renderGame(grid, message, lives, playerName, highscore, protection);					//render game state on screen
 		message = "                                 ";		//reset message
 		key = getKeyPress();								//read in next keyboard event
 		if (isArrowKey(key))
@@ -370,6 +370,8 @@ void updateSpotCoordinates(const char g[][SIZEX], Item& sp, int key, int& lives,
 	//and update spot coordinates if move is possible
 	const int targetY(sp.y + dy);
 	const int targetX(sp.x + dx);
+	if (protection >= 1)
+		cout << '\a';
 	switch (g[targetY][targetX])
 	{//...depending on what's on the target position in grid...
 	case PILL:
@@ -612,9 +614,9 @@ void displayInfo()
 	showOptions();
 }
 
-void renderGame(const char gd[][SIZEX], string mess, int lives, string playerName, int highScore)
+void renderGame(const char gd[][SIZEX], string mess, int lives, string playerName, int highScore, int protection)
 { //display game title, messages, maze, spot and apples on screen
-	void paintGrid(const char g[][SIZEX]);
+	void paintGrid(const char g[][SIZEX], int protection);
 	void showGameTitle();
 	void showGameOptions();
 	void showDateAndTime();
@@ -625,7 +627,7 @@ void renderGame(const char gd[][SIZEX], string mess, int lives, string playerNam
 	Clrscr();
 	Gotoxy(0, 0);
 	//display grid contents
-	paintGrid(gd);
+	paintGrid(gd, protection);
 	//display game title
 	showGameTitle();
 	showDateAndTime();
@@ -636,7 +638,7 @@ void renderGame(const char gd[][SIZEX], string mess, int lives, string playerNam
 	showPlayerScore(playerName, highScore);
 } //end of paintGame
 
-void paintGrid(const char g[][SIZEX])
+void paintGrid(const char g[][SIZEX], int protection)
 { //display grid content on screen
 	SelectBackColour(clDarkGrey);
 	int line(4);
@@ -647,6 +649,9 @@ void paintGrid(const char g[][SIZEX])
 		{
 			bool insideWall;
 			if (g[row][col] == SPOT)
+			if (protection >= 1)
+				SelectTextColour(clBlue);
+			else
 				SelectTextColour(clRed);
 			if (g[row][col] == PILL)
 				SelectTextColour(clCyan);

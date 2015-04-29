@@ -1,4 +1,4 @@
-﻿Build started 29/04/2015 11:40:32.
+﻿Build started 29/04/2015 11:51:36.
      1>Project "C:\Users\Kris\Documents\GitHub\Extension-FoP-Assignment\4374_Task1c_Skeleton\Project_VS13.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl- /Od /Oy- /D _MBCS /D _MBCS /D NODEBUG /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /GR /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt 4374_Task1c_Skeleton.cpp
@@ -9,20 +9,20 @@
      1>c:\users\kris\documents\github\extension-fop-assignment\4374_task1c_skeleton\4374_task1c_skeleton.cpp(320): warning C4018: '<' : signed/unsigned mismatch
      1>c:\users\kris\documents\github\extension-fop-assignment\4374_task1c_skeleton\4374_task1c_skeleton.cpp(326): warning C4018: '<' : signed/unsigned mismatch
      1>c:\users\kris\documents\github\extension-fop-assignment\4374_task1c_skeleton\4374_task1c_skeleton.cpp(334): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\kris\documents\github\extension-fop-assignment\4374_task1c_skeleton\4374_task1c_skeleton.cpp(400): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\kris\documents\github\extension-fop-assignment\4374_task1c_skeleton\4374_task1c_skeleton.cpp(415): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\kris\documents\github\extension-fop-assignment\4374_task1c_skeleton\4374_task1c_skeleton.cpp(461): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\kris\documents\github\extension-fop-assignment\4374_task1c_skeleton\4374_task1c_skeleton.cpp(547): warning C4996: 'getch': The POSIX name for this item is deprecated. Instead, use the ISO C++ conformant name: _getch. See online help for details.
-                 c:\program files (x86)\microsoft visual studio 12.0\vc\include\conio.h(131) : see declaration of 'getch'
+     1>c:\users\kris\documents\github\extension-fop-assignment\4374_task1c_skeleton\4374_task1c_skeleton.cpp(402): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\kris\documents\github\extension-fop-assignment\4374_task1c_skeleton\4374_task1c_skeleton.cpp(417): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\kris\documents\github\extension-fop-assignment\4374_task1c_skeleton\4374_task1c_skeleton.cpp(463): warning C4018: '<' : signed/unsigned mismatch
      1>c:\users\kris\documents\github\extension-fop-assignment\4374_task1c_skeleton\4374_task1c_skeleton.cpp(549): warning C4996: 'getch': The POSIX name for this item is deprecated. Instead, use the ISO C++ conformant name: _getch. See online help for details.
                  c:\program files (x86)\microsoft visual studio 12.0\vc\include\conio.h(131) : see declaration of 'getch'
-     1>c:\users\kris\documents\github\extension-fop-assignment\4374_task1c_skeleton\4374_task1c_skeleton.cpp(574): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\kris\documents\github\extension-fop-assignment\4374_task1c_skeleton\4374_task1c_skeleton.cpp(648): warning C4101: 'insideWall' : unreferenced local variable
-     1>c:\users\kris\documents\github\extension-fop-assignment\4374_task1c_skeleton\4374_task1c_skeleton.cpp(869): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\kris\documents\github\extension-fop-assignment\4374_task1c_skeleton\4374_task1c_skeleton.cpp(885): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\kris\documents\github\extension-fop-assignment\4374_task1c_skeleton\4374_task1c_skeleton.cpp(940): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\kris\documents\github\extension-fop-assignment\4374_task1c_skeleton\4374_task1c_skeleton.cpp(949): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\kris\documents\github\extension-fop-assignment\4374_task1c_skeleton\4374_task1c_skeleton.cpp(955): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\kris\documents\github\extension-fop-assignment\4374_task1c_skeleton\4374_task1c_skeleton.cpp(551): warning C4996: 'getch': The POSIX name for this item is deprecated. Instead, use the ISO C++ conformant name: _getch. See online help for details.
+                 c:\program files (x86)\microsoft visual studio 12.0\vc\include\conio.h(131) : see declaration of 'getch'
+     1>c:\users\kris\documents\github\extension-fop-assignment\4374_task1c_skeleton\4374_task1c_skeleton.cpp(576): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\kris\documents\github\extension-fop-assignment\4374_task1c_skeleton\4374_task1c_skeleton.cpp(650): warning C4101: 'insideWall' : unreferenced local variable
+     1>c:\users\kris\documents\github\extension-fop-assignment\4374_task1c_skeleton\4374_task1c_skeleton.cpp(874): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\kris\documents\github\extension-fop-assignment\4374_task1c_skeleton\4374_task1c_skeleton.cpp(890): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\kris\documents\github\extension-fop-assignment\4374_task1c_skeleton\4374_task1c_skeleton.cpp(945): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\kris\documents\github\extension-fop-assignment\4374_task1c_skeleton\4374_task1c_skeleton.cpp(954): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\kris\documents\github\extension-fop-assignment\4374_task1c_skeleton\4374_task1c_skeleton.cpp(960): warning C4018: '<' : signed/unsigned mismatch
        Link:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Kris\Documents\GitHub\Extension-FoP-Assignment\4374_Task1c_Skeleton\Debug\Project_VS13.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\Kris\Documents\GitHub\Extension-FoP-Assignment\4374_Task1c_Skeleton\Debug\Project_VS13.pdb" /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Kris\Documents\GitHub\Extension-FoP-Assignment\4374_Task1c_Skeleton\Debug\Project_VS13.lib" /MACHINE:X86 Debug\4374_Task1c_Skeleton.obj
          Debug\ConsoleUtils.obj
