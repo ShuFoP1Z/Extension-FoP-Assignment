@@ -981,7 +981,13 @@ int getDificulty()
 {
 	int difficult;
 	Gotoxy(10, 17);
-	cout << "Please enter the difficulty - 3 : Easy 2 : Normal : 1 Hard - ";
+	cout << "Please enter the difficulty - 3 : Easy  2 : Normal  1 : Hard - ";
 	cin >> difficult;
+	while (difficult >= 4 || difficult <= 0)
+	{
+		Gotoxy(10, 17);
+		cout << "Invalid! please re-enter - 3 : Easy  2 : Normal  1 : Hard - ";
+		cin >> difficult;
+	}
 	return difficult;
 }
