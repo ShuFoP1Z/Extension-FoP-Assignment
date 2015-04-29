@@ -114,7 +114,7 @@ void playGame(string playerName, int difficulty)
 	bool outOfZombies(vector<Item> zombies);
 	bool outOfPills(int pillsRemaining);
 	int  getKeyPress();
-	void updateGame(char g[][SIZEX], Item& sp, vector<Item> holes, int k, int& lives, string& mess, vector<Item>& pills, int& pillsRemaining, vector<Item>& zombies, bool frozen);
+	void updateGame(char g[][SIZEX], Item& sp, vector<Item> holes, int k, int& lives, string& mess, vector<Item>& pills, int& pillsRemaining, vector<Item>& zombies, bool frozen, int& protection);
 	void renderGame(const char g[][SIZEX], string mess, int lives, string playerName, int highScore);
 	void endProgram(int lives, int key, vector<Item> zombies, int pillsRemaining ,string name, int highscore);
 	int getPlayerScore(string name);
@@ -137,6 +137,7 @@ void playGame(string playerName, int difficulty)
 	vector<Item> zombies(4, zombie);				     	//Initialise a vector of zombies, each element will be initialised as zombie
 	int pillsRemaining(pills.size());									//The number of pills still being shown
 	string message("         LET'S START...          ");	//current message to player
+	int protection(0);
 
 	bool running = true;
 
@@ -150,7 +151,7 @@ void playGame(string playerName, int difficulty)
 		message = "                                 ";		//reset message
 		key = getKeyPress();								//read in next keyboard event
 		if (isArrowKey(key))
-			updateGame(grid, spot, holes, key, lives, message, pills, pillsRemaining, zombies, frozen);
+			updateGame(grid, spot, holes, key, lives, message, pills, pillsRemaining, zombies, frozen, protection);
 		else
 		if (toupper(key) == FREEZE || toupper(key) == EXTERMINATE || toupper(key) == EAT) //see if there are cheats
 			cheats(lives, zombies, pills, key, frozen, pillsRemaining, exterminate);
@@ -167,15 +168,16 @@ void playGame(string playerName, int difficulty)
 	endProgram(lives, key, zombies, pillsRemaining, playerName, highscore);
 }
 
-void updateGame(char grid[][SIZEX], Item& spot, vector<Item> holes, int key, int& lives, string& message, vector<Item>& pills, int& pillsRemaining, vector<Item>& zombies, bool frozen)
+void updateGame(char grid[][SIZEX], Item& spot, vector<Item> holes, int key, int& lives, string& message, vector<Item>& pills, int& pillsRemaining, vector<Item>& zombies, bool frozen, int& protection)
 { //updateGame state
-	void updateSpotCoordinates(const char g[][SIZEX], Item& spot, int key, int& lives, string& mess, vector<Item>& pills, int& pillsRemaining);
-	void updateZombieCoordinates(const char g[][SIZEX], vector<Item>& zombies, Item spot, int& lives, string& message, bool frozen);
+	void updateSpotCoordinates(const char g[][SIZEX], Item& spot, int key, int& lives, string& mess, vector<Item>& pills, int& pillsRemaining, int& protection, vector<Item>& zombies);
+	void updateZombieCoordinates(const char g[][SIZEX], vector<Item>& zombies, Item spot, int& lives, string& message, bool frozen, int& protection);
 	void updateGrid(char g[][SIZEX], Item spot, vector<Item> holes, vector<Item> pills, vector<Item> zombies);
 
-	updateSpotCoordinates(grid, spot, key, lives, message, pills, pillsRemaining);	//update according to key
-	updateZombieCoordinates(grid, zombies, spot, lives, message, frozen);	//update the zombie position based on spots location
+	updateSpotCoordinates(grid, spot, key, lives, message, pills, pillsRemaining, protection, zombies);	//update according to key
+	updateZombieCoordinates(grid, zombies, spot, lives, message, frozen, protection);	//update the zombie position based on spots location
 	updateGrid(grid, spot, holes, pills, zombies);							//update grid information
+	protection--;
 }
 //---------------------------------------------------------------------------
 //----- initialise game state
@@ -356,7 +358,7 @@ void updateGrid(char grid[][SIZEX], Item spot, vector<Item> holes, vector<Item> 
 //---------------------------------------------------------------------------
 //----- move the spot
 //---------------------------------------------------------------------------
-void updateSpotCoordinates(const char g[][SIZEX], Item& sp, int key, int& lives, string& mess, vector<Item>& pills, int& pillsRemaining)
+void updateSpotCoordinates(const char g[][SIZEX], Item& sp, int key, int& lives, string& mess, vector<Item>& pills, int& pillsRemaining, int& protection, vector<Item>& zombies)
 { //move spot in required direction
 	void setKeyDirection(int k, int& dx, int& dy);
 	void removePill(vector<Item>& pills, Item sp, string& message, int& pillsRemaining);
@@ -375,6 +377,7 @@ void updateSpotCoordinates(const char g[][SIZEX], Item& sp, int key, int& lives,
 		sp.x += dx;							//go in that X direction
 		++lives;							//add a life
 		removePill(pills, sp, mess, pillsRemaining);		//remove the pill
+		protection = 10;
 		break;
 	case HOLE:								//can move
 		sp.y += dy;							//go in that Y direction
@@ -389,9 +392,19 @@ void updateSpotCoordinates(const char g[][SIZEX], Item& sp, int key, int& lives,
 		std::cout << '\a';						//beep the alarm
 		mess = "       CANNOT GO THERE...        ";
 		break;
+	case ZOMBIE:
+		if (protection >= 1)
+		{
+			sp.y += dy;							//go in that Y direction
+			sp.x += dx;							//go in that X direction
+			for (int i = 0; i < zombies.size(); ++i)
+			if (zombies[i].x == sp.x && zombies[i].y == sp.y)
+				zombies[i].isBeingRendered = false;
+		}
+		break;
 	}
 } //end of updateSpotCoordinates
-void updateZombieCoordinates(const char g[][SIZEX], vector<Item>& zombies, Item spot, int& lives, string& message, bool frozen)
+void updateZombieCoordinates(const char g[][SIZEX], vector<Item>& zombies, Item spot, int& lives, string& message, bool frozen, int& protection)
 {
 	void resetZombiePosition(vector<Item>& zombies, int arrayIndex); //Will reset the zombies position 
 	int dx(0), dy(0); //The maximum amount the player can move by
@@ -405,7 +418,7 @@ void updateZombieCoordinates(const char g[][SIZEX], vector<Item>& zombies, Item 
 			{
 				displaceX = (spot.x - zombies[i].x); //Determine whether a positive dx is needed or a negative
 				displaceY = (spot.y - zombies[i].y); //Determine whether a positive dy is needed or a negative
-
+	
 				if (displaceX != 0)//If the x displacement isn't 0 
 				{
 					dx = displaceX / abs(displaceX); //divide the displacement in x by it's absolute value (to give us either +1 or -1 change)
@@ -423,14 +436,26 @@ void updateZombieCoordinates(const char g[][SIZEX], vector<Item>& zombies, Item 
 				{
 					dy = 0; //set dy to 0 
 				}
+
+				if (protection >= 1)
+				{
+					dy = dy * - 1;
+					dx = dx * -1;
+				}
+
 				const int targetX(zombies[i].x + dx); //Set the target destination of the zombie's x to it's x position + the new change
 				const int targetY(zombies[i].y + dy);//Set the target destination of the zombie's y to it's y position + the new change
 
 				//If spot is in the location the zombie is moving into 
 				if (spot.x == targetX && spot.y == targetY)
 				{
-					--lives; //Decrement spots lives
-					resetZombiePosition(zombies, i); //reset this zombies position
+					if (protection >= 1)
+						zombies[i].isBeingRendered = false;
+					else
+					{
+						--lives; //Decrement spots lives
+						resetZombiePosition(zombies, i); //reset this zombies position
+					}
 				}
 
 				for (int j = 0; j < zombies.size(); ++j)
