@@ -826,7 +826,7 @@ YOUR SCORE IS THE NUMBER OF LIVES LEFT * 13, WHEN THE GAME ENDS
 void endProgram(int lives, int key, vector<Item> zombies, int pillsRemaining, string name, int highscore, string highscoreNames[], int highscoreNumbers[])
 { //end program with appropriate 
 	void writeToSaveFile(string name, int lives, int highscore); //Store the players current best in a .scr file
-	void writeToBestScores(string highscoreNames[], int highscoreNumbers[], int index);	//Write to the bestScores.txt
+	void writeToBestScores(string name, int lives, string highscoreNames[], int highscoreNumbers[], int index);	//Write to the bestScores.txt
 	int isNewHighScore(int lives, const int scores []);	//Will check if a new highscore has been achieved
 	SelectBackColour(clBlack);
 	SelectTextColour(clYellow);
@@ -842,7 +842,7 @@ void endProgram(int lives, int key, vector<Item> zombies, int pillsRemaining, st
 	}
 	int index = isNewHighScore(lives, highscoreNumbers);
 	if (index > -1)
-		writeToBestScores(highscoreNames, highscoreNumbers, index);
+		writeToBestScores(name, lives, highscoreNames, highscoreNumbers, index);
 	writeToSaveFile(name, lives, highscore);
 
 	//If zombies are not being rendered
@@ -946,9 +946,12 @@ void writeToSaveFile(string name, int lives, int highscore)
 	}
 	toFile.close();
 }//end of writeToSaveFile
-void writeToBestScores(string highscoreNames[], int highscoreNumbers[], int index)
+void writeToBestScores(string playerName, int lives, string highscoreNames[], int highscoreNumbers[], int index)
 {
+
 	ofstream toFile; 
+	string tempNames[MAX_HIGHSCORES]; //Will store the new highscore names and be used to write to file
+	int tempScores[MAX_HIGHSCORES];	//Will store the new highscore numbers and be used to write to file
 
 	toFile.open("bestScores.txt", ios::out);
 
@@ -958,9 +961,40 @@ void writeToBestScores(string highscoreNames[], int highscoreNumbers[], int inde
 	}
 	else
 	{
+		if (index == 0)
+		{
+			tempNames[0] = playerName; 
+			tempScores[0] = lives * 13;
+			for (int i = 1; i < MAX_HIGHSCORES; ++i)
+			{
+				tempNames[i] = highscoreNames[i - 1];
+				tempScores[i] = highscoreNumbers[i - 1];
+			}
+		}
+		else
+		{
+			for (int i = 0; i < index; ++i)
+			{
+				tempNames[i] = highscoreNames[i];
+				tempScores[i] = highscoreNumbers[i];
+			}
+			tempNames[index] = playerName;
+			tempScores[index] = lives * 13;
+			for (int i = index + 1; i < MAX_HIGHSCORES; ++i)
+			{
+				if (i + 1 < MAX_HIGHSCORES)
+					tempNames[i] = highscoreNames[i + 1];
+					tempScores[i] = highscoreNumbers[i + 1];
+				}
+			}
 
-	}
+		}
+		for (int i = 0; i < MAX_HIGHSCORES; ++i)
+		{
+			toFile << tempNames[i] << " " << tempScores[i] << endl;
+		}
 	toFile.close();
+
 	return;
 }//end of writeToBestScores
 void cheats(int& lives, vector<Item>& zombies, vector<Item>& pills, int key, bool& frozen, int& pillsRemaining, bool& exterminate)
