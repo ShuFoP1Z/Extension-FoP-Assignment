@@ -895,7 +895,7 @@ int getPlayerScore(string name)
 	if (fromFile.fail())//If the file failed to open
 	{
 		//print an error to the screen
-		std::cout << "ERROR! Unable to read from save file!";
+		cout << "ERROR! Unable to read from save file!";
 	}
 	else
 	{
@@ -926,7 +926,6 @@ void writeToSaveFile(string name, int lives, int highscore)
 	{
 		if (lives > highscore)
 			toFile << lives;
-		toFile << lives;
 	}
 	toFile.close();
 }//end of writeToSaveFile
@@ -1015,12 +1014,12 @@ void updateAllCoordinates(const char grid[SIZEY][SIZEX], Item& spot, vector<Item
 				spot.x = col;
 				spot.y = row;
 				break;
-			case HOLE:
+			/*case HOLE:
 				holes[h].x = col;
 				holes[h].y = row;
 				if (h < holes.size())
 					++h;
-				break;
+				break;*/
 			case PILL:
 				pills[p].x = col;
 				pills[p].y = row;

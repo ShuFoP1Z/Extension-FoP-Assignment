@@ -1,4 +1,4 @@
-﻿Build started 29/04/2015 00:14:47.
+﻿Build started 29/04/2015 11:15:32.
      1>Project "C:\Users\Ashley\Documents\GitHub\Extension-FoP-Assignment\4374_Task1c_Skeleton\Project_VS13.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl- /Od /Oy- /D _MBCS /D _MBCS /D NODEBUG /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /GR /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt 4374_Task1c_Skeleton.cpp
@@ -22,7 +22,6 @@
      1>c:\users\ashley\documents\github\extension-fop-assignment\4374_task1c_skeleton\4374_task1c_skeleton.cpp(938): warning C4018: '<' : signed/unsigned mismatch
      1>c:\users\ashley\documents\github\extension-fop-assignment\4374_task1c_skeleton\4374_task1c_skeleton.cpp(944): warning C4018: '<' : signed/unsigned mismatch
      1>c:\users\ashley\documents\github\extension-fop-assignment\4374_task1c_skeleton\4374_task1c_skeleton.cpp(984): warning C4101: 'nextChar' : unreferenced local variable
-     1>c:\users\ashley\documents\github\extension-fop-assignment\4374_task1c_skeleton\4374_task1c_skeleton.cpp(1021): warning C4018: '<' : signed/unsigned mismatch
      1>c:\users\ashley\documents\github\extension-fop-assignment\4374_task1c_skeleton\4374_task1c_skeleton.cpp(1027): warning C4018: '<' : signed/unsigned mismatch
      1>c:\users\ashley\documents\github\extension-fop-assignment\4374_task1c_skeleton\4374_task1c_skeleton.cpp(1033): warning C4018: '<' : signed/unsigned mismatch
        Link:
@@ -35,4 +34,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:01.48
+Time Elapsed 00:00:01.67
