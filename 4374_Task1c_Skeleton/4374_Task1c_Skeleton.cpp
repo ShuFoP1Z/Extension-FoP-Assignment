@@ -22,6 +22,7 @@ using namespace std;
 //defining the size of the grid
 const int SIZEY(12);						//vertical dimension
 const int SIZEX(20);						//horizontal dimension
+const int MAX_HIGHSCORES(6);				//max number of high scores
 const string EXTENSION = ".scr";			//file extension for the playerscore
 //defining symbols used for display of the grid and content
 const char SPOT('@');						//spot
@@ -43,7 +44,7 @@ const char BACK('\r');						//go back
 const char EXTERMINATE('X');				//kill all zombies
 const char FREEZE('F');						//freeze all zombies
 const char EAT('E');						//eat all the pills
-
+const char BESTSCORES('B');
 //data structure to store data for a grid item
 struct Item
 {
@@ -60,19 +61,21 @@ int main()
 	//function declarations (prototypes)
 	int  getKeyPress();
 	bool wantToQuit(int k);
-	void playGame(string playerName, int difficulty);
+	void playGame(string playerName, int difficulty, string[], int[]);
 	void displayMenu();
 	void displayInfo();
 	void displayExit();
 	string getPlayerName();
 	int getDificulty();
-
+	void getHighScoresList(string names[], int scores[]);
 	//local variable declarations 
 	bool running = true;									//to exit the game
 	bool back = false;										//to get back to the menu
 	int key(' ');											//create key to store keyboard events
 	string playerName;
 	int difficulty;
+	string highscoreNames[MAX_HIGHSCORES];
+	int highscoreNumbers[MAX_HIGHSCORES];
 	//menu
 	do {
 		displayMenu();										//display the main menu
@@ -81,7 +84,8 @@ int main()
 		if (toupper(key) == PLAY){
 			playerName = getPlayerName();
 			difficulty = getDificulty();
-			playGame(playerName, difficulty);
+			getHighScoresList(highscoreNames, highscoreNumbers);
+			playGame(playerName, difficulty, highscoreNames, highscoreNumbers);
 		}//quit
 		if (wantToQuit(key))
 		{
@@ -104,7 +108,7 @@ int main()
 	return 0;
 } //end main
 
-void playGame(string playerName, int difficulty)
+void playGame(string playerName, int difficulty, string highscoreNames[], int highscoreNumbers[])
 {
 	//function declarations (prototypes)
 	void initialiseGame(char grid[][SIZEX], Item& spot, vector<Item>& holes, vector<Item>& pills, vector<Item>& zombies);
@@ -114,12 +118,13 @@ void playGame(string playerName, int difficulty)
 	bool outOfZombies(vector<Item> zombies);
 	bool outOfPills(int pillsRemaining);
 	int  getKeyPress();
+
 	void updateGame(char g[][SIZEX], Item& sp, vector<Item> holes, int k, int& lives, string& mess, vector<Item>& pills, int& pillsRemaining, vector<Item>& zombies, bool frozen, int& protection);
-	void renderGame(const char g[][SIZEX], string mess, int lives, string playerName, int highScore, int protection);
-	void endProgram(int lives, int key, vector<Item> zombies, int pillsRemaining ,string name, int highscore);
+	void renderGame(const char g[][SIZEX], string mess, int lives, string playerName, int highScore, int protection, bool showScores, const string [], const int[]);
+	void endProgram(int lives, int key, vector<Item> zombies, int pillsRemaining, string name, int highscore, string highscoreNames[], int highscoreNumbers[]);
+
 	int getPlayerScore(string name);
 	void cheats(int& lives, vector<Item>& zombies, vector<Item>& pills, int key, bool& frozen, int& pillsRemaining, bool& exterminate);
-
 
 	//local variable declarations 
 	char grid[SIZEY][SIZEX];								//grid for display
@@ -140,6 +145,7 @@ void playGame(string playerName, int difficulty)
 	int protection(0);
 
 	bool running = true;
+	bool showScores = false; //for if the game is displaying the highscores list
 
 	//action...
 
@@ -147,16 +153,26 @@ void playGame(string playerName, int difficulty)
 
 	int key(' ');											//create key to store keyboard events
 	do {
-		renderGame(grid, message, lives, playerName, highscore, protection);					//render game state on screen
+		renderGame(grid, message, lives, playerName, highscore, protection, showScores, highscoreNames, highscoreNumbers);					//render game state on screen
 		message = "                                 ";		//reset message
 		key = getKeyPress();								//read in next keyboard event
 		if (isArrowKey(key))
+		{
 			updateGame(grid, spot, holes, key, lives, message, pills, pillsRemaining, zombies, frozen, protection);
-		else
-		if (toupper(key) == FREEZE || toupper(key) == EXTERMINATE || toupper(key) == EAT) //see if there are cheats
+		}
+		else if (toupper(key) == FREEZE || toupper(key) == EXTERMINATE || toupper(key) == EAT) //see if there are cheats
+		{
 			cheats(lives, zombies, pills, key, frozen, pillsRemaining, exterminate);
+
+		}
+		else if (toupper(key) == BESTSCORES)
+		{
+			showScores = !showScores; //showScores becomes equal to the opposite boolean value of itself
+		}
 		else
+		{
 			message = "          INVALID KEY!           ";	//set 'Invalid key' message
+		}
 		if (wantToQuit(key))								//if player wants to quit
 			running = false;
 		if (outOfLives(lives))								//if player is out of lives
@@ -165,7 +181,7 @@ void playGame(string playerName, int difficulty)
 			running = false;
 	} while (running);
 
-	endProgram(lives, key, zombies, pillsRemaining, playerName, highscore);
+	endProgram(lives, key, zombies, pillsRemaining, playerName, highscore, highscoreNames, highscoreNumbers);
 }
 
 void updateGame(char grid[][SIZEX], Item& spot, vector<Item> holes, int key, int& lives, string& message, vector<Item>& pills, int& pillsRemaining, vector<Item>& zombies, bool frozen, int& protection)
@@ -614,7 +630,7 @@ void displayInfo()
 	showOptions();
 }
 
-void renderGame(const char gd[][SIZEX], string mess, int lives, string playerName, int highScore, int protection)
+void renderGame(const char g[][SIZEX], string mess, int lives, string playerName, int highScore, int protection, bool showScores, const string  names[], const int numbers[])
 { //display game title, messages, maze, spot and apples on screen
 	void paintGrid(const char g[][SIZEX], int protection);
 	void showGameTitle();
@@ -622,12 +638,13 @@ void renderGame(const char gd[][SIZEX], string mess, int lives, string playerNam
 	void showDateAndTime();
 	void showPlayerScore(string playerName, int highScore);
 	void showMessage(string, int lives);
+	void showBestScores(const string[], const int[]); //Will display the best scores
 
 	SelectBackColour(clBlack);
 	Clrscr();
 	Gotoxy(0, 0);
 	//display grid contents
-	paintGrid(gd, protection);
+	paintGrid(g, protection);
 	//display game title
 	showGameTitle();
 	showDateAndTime();
@@ -636,6 +653,8 @@ void renderGame(const char gd[][SIZEX], string mess, int lives, string playerNam
 	//display message if any
 	showMessage(mess, lives);
 	showPlayerScore(playerName, highScore);
+	if (showScores)
+		showBestScores(names, numbers);
 } //end of paintGame
 
 void paintGrid(const char g[][SIZEX], int protection)
@@ -834,11 +853,13 @@ void showHelp()
 	cout << " WHEN THE GAME ENDS ";
 }
 /*
-YOUR SCORE IS THE NUMBER OF LIVES LEFT WHEN THE GAME ENDS
+YOUR SCORE IS THE NUMBER OF LIVES LEFT * 13, WHEN THE GAME ENDS
 */
-void endProgram(int lives, int key, vector<Item> zombies, int pillsRemaining, string name, int highscore)
+void endProgram(int lives, int key, vector<Item> zombies, int pillsRemaining, string name, int highscore, string highscoreNames[], int highscoreNumbers[])
 { //end program with appropriate 
-	void writeToSaveFile(string name, int lives, int highscore);
+	void writeToSaveFile(string name, int lives, int highscore); //Store the players current best in a .scr file
+	void writeToBestScores(string name, int lives, string highscoreNames[], int highscoreNumbers[], int index);	//Write to the bestScores.txt
+	int isNewHighScore(int lives, const int scores []);	//Will check if a new highscore has been achieved
 	SelectBackColour(clBlack);
 	SelectTextColour(clYellow);
 	Gotoxy(40, 13);
@@ -851,6 +872,9 @@ void endProgram(int lives, int key, vector<Item> zombies, int pillsRemaining, st
 	{
 		cout << "         ALL ZOMBIES DIED!	      ";
 	}
+	int index = isNewHighScore(lives, highscoreNumbers);
+	if (index > -1)
+		writeToBestScores(name, lives, highscoreNames, highscoreNumbers, index);
 	writeToSaveFile(name, lives, highscore);
 
 	//If zombies are not being rendered
@@ -859,7 +883,24 @@ void endProgram(int lives, int key, vector<Item> zombies, int pillsRemaining, st
 	cout << " ";
 	system("pause");
 } //end of endProgram
+int isNewHighScore(int lives, const int scores[])
+{
+	bool foundNewHighest(false); //boolean to say has a new high score been found
+	int index(-1);	//The index in the array it was found at
+	int counter(0); //counter for the array
 
+	while (counter < MAX_HIGHSCORES && !foundNewHighest)
+	{
+		if ((lives * 13) > scores[counter])
+		{
+			index = counter; 
+			foundNewHighest = true;
+		}
+		++counter;
+	} 
+
+	return(index);
+}//end of isNewHighScore
 void displayExit()
 {
 	SelectBackColour(clBlue);
@@ -933,11 +974,69 @@ void writeToSaveFile(string name, int lives, int highscore)
 	else
 	{
 		if (lives > highscore)
-			toFile << lives;
-		toFile << lives;
+			toFile << (lives * 13);
 	}
 	toFile.close();
 }//end of writeToSaveFile
+void writeToBestScores(string playerName, int lives, string highscoreNames[], int highscoreNumbers[], int index)
+{
+
+	ofstream toFile; 
+	string tempNames[MAX_HIGHSCORES]; //Will store the new highscore names and be used to write to file
+	int tempScores[MAX_HIGHSCORES];	//Will store the new highscore numbers and be used to write to file
+
+	toFile.open("bestScores.txt", ios::out);
+
+	if (toFile.fail())
+	{
+		cout << "ERROR! Failed to open bestScores.txt";
+	}
+	else
+	{
+		if (index == 0)//if the index of the players score is 0
+		{
+			//place the player at the top of the array
+			tempNames[0] = playerName; 
+			tempScores[0] = lives * 13;
+
+			for (int i = 1; i < MAX_HIGHSCORES; ++i)
+			{	//loop through and place all scores from the original array into the temp array 1 below their old position
+				tempNames[i] = highscoreNames[i - 1];
+				tempScores[i] = highscoreNumbers[i - 1];
+			}
+		}
+		else
+		{
+			//place everything above player above
+			for (int i = 0; i < index; ++i)
+			{
+				tempNames[i] = highscoreNames[i];
+				tempScores[i] = highscoreNumbers[i];
+			}
+			//place the player in the array 
+			tempNames[index] = playerName;
+			tempScores[index] = lives * 13;
+			//place everything below the player in the array
+			for (int i = index + 1; i < MAX_HIGHSCORES; ++i)
+			{
+				if (i + 1 < MAX_HIGHSCORES)
+					tempNames[i] = highscoreNames[i + 1];
+					tempScores[i] = highscoreNumbers[i + 1];
+				}
+			}
+
+			//write this to file
+			for (int i = 0; i < MAX_HIGHSCORES; ++i)
+			{
+				toFile << tempNames[i] << " " << tempScores[i] << endl;
+			}
+
+		}
+
+	toFile.close();
+
+	return;
+}//end of writeToBestScores
 void cheats(int& lives, vector<Item>& zombies, vector<Item>& pills, int key, bool& frozen, int& pillsRemaining, bool& exterminate)
 {
 	if (toupper(key) == EAT)
@@ -976,7 +1075,35 @@ void cheats(int& lives, vector<Item>& zombies, vector<Item>& pills, int key, boo
 			frozen = false;
 	}
 }
+void getHighScoresList(string names[], int scores[])
+{
+	ifstream fromFile;
+	
+	fromFile.open("bestScores.txt", ios::in);
 
+	if (fromFile.fail())
+	{
+		cout << "ERROR! Failed to open bestScores.txt";
+	}
+	else
+	{
+		for (int i = 0; i < MAX_HIGHSCORES; ++i)
+		{
+			if (!fromFile.eof())
+				fromFile >> names[i] >> scores[i];
+		}
+	}
+	fromFile.close();
+}//end of getHighScoresList
+void showBestScores(const string highscoreNames [], const int highscoreNumbers[])
+{//gotoxy(10,10);
+	//Gotoxy(10, 18);
+	for (int i = 0; i < MAX_HIGHSCORES; ++i)
+	{
+		Gotoxy(10, 18 + i);
+		cout << highscoreNames[i] << "         " << highscoreNumbers[i];
+	}
+}
 int getDificulty()
 {
 	int difficult;
