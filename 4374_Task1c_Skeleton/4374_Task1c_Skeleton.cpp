@@ -143,11 +143,11 @@ void playGame(string playerName)
 
 	//action...
 	if (!checkForSaveGame(playerName))
-		initialiseGame(grid, spot, holes, pills, zombies);		//initialise grid (incl. walls and spot)
+		initialiseGame(grid, spot, holes, pills, zombies);	//initialise grid (incl. walls and spot)
 	else
 	{
 		message = loadGame(grid, playerName, lives);
-		updateAllCoordinates(grid, spot, holes, pills, zombies);
+		updateAllCoordinates(grid, spot, pills, zombies, holes);
 	}
 
 	int key(' ');											//create key to store keyboard events
@@ -162,7 +162,7 @@ void playGame(string playerName)
 		if (toupper(key) == LOAD)
 		{
 			message = loadGame(grid, playerName, lives);
-			updateAllCoordinates(grid, spot, holes, pills, zombies);
+			updateAllCoordinates(grid, spot, pills, zombies, holes);
 		}
 		else
 			message = "          INVALID KEY!           ";	//set 'Invalid key' message
@@ -1014,17 +1014,17 @@ void updateAllCoordinates(const char grid[SIZEY][SIZEX], Item& spot, vector<Item
 				spot.x = col;
 				spot.y = row;
 				break;
-			/*case HOLE:
-				holes[h].x = col;
-				holes[h].y = row;
-				if (h < holes.size())
-					++h;
-				break;*/
 			case PILL:
 				pills[p].x = col;
 				pills[p].y = row;
 				if (p < pills.size())
 					++p;
+				break;
+			case HOLE:
+				holes[h].x = col;
+				holes[h].y = row;
+				if (h < holes.size())
+					++h;
 				break;
 			case ZOMBIE:
 				zombies[z].x = col;
