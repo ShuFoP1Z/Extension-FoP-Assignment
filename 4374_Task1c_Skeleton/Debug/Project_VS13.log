@@ -1,30 +1,33 @@
-﻿Build started 29/04/2015 11:34:29.
+﻿Build started 29/04/2015 12:57:49.
      1>Project "C:\Users\Ashley\Documents\GitHub\Extension-FoP-Assignment\4374_Task1c_Skeleton\Project_VS13.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl- /Od /Oy- /D _MBCS /D _MBCS /D NODEBUG /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /GR /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt 4374_Task1c_Skeleton.cpp
          4374_Task1c_Skeleton.cpp
-     1>c:\users\ashley\documents\github\extension-fop-assignment\4374_task1c_skeleton\4374_task1c_skeleton.cpp(236): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\ashley\documents\github\extension-fop-assignment\4374_task1c_skeleton\4374_task1c_skeleton.cpp(257): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\ashley\documents\github\extension-fop-assignment\4374_task1c_skeleton\4374_task1c_skeleton.cpp(280): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\ashley\documents\github\extension-fop-assignment\4374_task1c_skeleton\4374_task1c_skeleton.cpp(311): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\ashley\documents\github\extension-fop-assignment\4374_task1c_skeleton\4374_task1c_skeleton.cpp(317): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\ashley\documents\github\extension-fop-assignment\4374_task1c_skeleton\4374_task1c_skeleton.cpp(325): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\ashley\documents\github\extension-fop-assignment\4374_task1c_skeleton\4374_task1c_skeleton.cpp(395): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\ashley\documents\github\extension-fop-assignment\4374_task1c_skeleton\4374_task1c_skeleton.cpp(429): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\ashley\documents\github\extension-fop-assignment\4374_task1c_skeleton\4374_task1c_skeleton.cpp(515): warning C4996: 'getch': The POSIX name for this item is deprecated. Instead, use the ISO C++ conformant name: _getch. See online help for details.
+     1>c:\users\ashley\documents\github\extension-fop-assignment\4374_task1c_skeleton\4374_task1c_skeleton.cpp(229): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\ashley\documents\github\extension-fop-assignment\4374_task1c_skeleton\4374_task1c_skeleton.cpp(250): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\ashley\documents\github\extension-fop-assignment\4374_task1c_skeleton\4374_task1c_skeleton.cpp(273): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\ashley\documents\github\extension-fop-assignment\4374_task1c_skeleton\4374_task1c_skeleton.cpp(304): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\ashley\documents\github\extension-fop-assignment\4374_task1c_skeleton\4374_task1c_skeleton.cpp(310): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\ashley\documents\github\extension-fop-assignment\4374_task1c_skeleton\4374_task1c_skeleton.cpp(318): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\ashley\documents\github\extension-fop-assignment\4374_task1c_skeleton\4374_task1c_skeleton.cpp(388): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\ashley\documents\github\extension-fop-assignment\4374_task1c_skeleton\4374_task1c_skeleton.cpp(422): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\ashley\documents\github\extension-fop-assignment\4374_task1c_skeleton\4374_task1c_skeleton.cpp(508): warning C4996: 'getch': The POSIX name for this item is deprecated. Instead, use the ISO C++ conformant name: _getch. See online help for details.
                  c:\program files (x86)\microsoft visual studio 12.0\vc\include\conio.h(131) : see declaration of 'getch'
-     1>c:\users\ashley\documents\github\extension-fop-assignment\4374_task1c_skeleton\4374_task1c_skeleton.cpp(517): warning C4996: 'getch': The POSIX name for this item is deprecated. Instead, use the ISO C++ conformant name: _getch. See online help for details.
+     1>c:\users\ashley\documents\github\extension-fop-assignment\4374_task1c_skeleton\4374_task1c_skeleton.cpp(510): warning C4996: 'getch': The POSIX name for this item is deprecated. Instead, use the ISO C++ conformant name: _getch. See online help for details.
                  c:\program files (x86)\microsoft visual studio 12.0\vc\include\conio.h(131) : see declaration of 'getch'
-     1>c:\users\ashley\documents\github\extension-fop-assignment\4374_task1c_skeleton\4374_task1c_skeleton.cpp(542): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\ashley\documents\github\extension-fop-assignment\4374_task1c_skeleton\4374_task1c_skeleton.cpp(618): warning C4101: 'insideWall' : unreferenced local variable
-     1>c:\users\ashley\documents\github\extension-fop-assignment\4374_task1c_skeleton\4374_task1c_skeleton.cpp(848): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\ashley\documents\github\extension-fop-assignment\4374_task1c_skeleton\4374_task1c_skeleton.cpp(864): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\ashley\documents\github\extension-fop-assignment\4374_task1c_skeleton\4374_task1c_skeleton.cpp(937): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\ashley\documents\github\extension-fop-assignment\4374_task1c_skeleton\4374_task1c_skeleton.cpp(943): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\ashley\documents\github\extension-fop-assignment\4374_task1c_skeleton\4374_task1c_skeleton.cpp(535): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\ashley\documents\github\extension-fop-assignment\4374_task1c_skeleton\4374_task1c_skeleton.cpp(611): warning C4101: 'insideWall' : unreferenced local variable
+     1>c:\users\ashley\documents\github\extension-fop-assignment\4374_task1c_skeleton\4374_task1c_skeleton.cpp(841): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\ashley\documents\github\extension-fop-assignment\4374_task1c_skeleton\4374_task1c_skeleton.cpp(857): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\ashley\documents\github\extension-fop-assignment\4374_task1c_skeleton\4374_task1c_skeleton.cpp(930): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\ashley\documents\github\extension-fop-assignment\4374_task1c_skeleton\4374_task1c_skeleton.cpp(936): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\ashley\documents\github\extension-fop-assignment\4374_task1c_skeleton\4374_task1c_skeleton.cpp(969): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\ashley\documents\github\extension-fop-assignment\4374_task1c_skeleton\4374_task1c_skeleton.cpp(971): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\ashley\documents\github\extension-fop-assignment\4374_task1c_skeleton\4374_task1c_skeleton.cpp(973): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\ashley\documents\github\extension-fop-assignment\4374_task1c_skeleton\4374_task1c_skeleton.cpp(1001): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\ashley\documents\github\extension-fop-assignment\4374_task1c_skeleton\4374_task1c_skeleton.cpp(1003): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\ashley\documents\github\extension-fop-assignment\4374_task1c_skeleton\4374_task1c_skeleton.cpp(1005): warning C4018: '<' : signed/unsigned mismatch
      1>c:\users\ashley\documents\github\extension-fop-assignment\4374_task1c_skeleton\4374_task1c_skeleton.cpp(983): warning C4101: 'nextChar' : unreferenced local variable
-     1>c:\users\ashley\documents\github\extension-fop-assignment\4374_task1c_skeleton\4374_task1c_skeleton.cpp(1020): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\ashley\documents\github\extension-fop-assignment\4374_task1c_skeleton\4374_task1c_skeleton.cpp(1026): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\ashley\documents\github\extension-fop-assignment\4374_task1c_skeleton\4374_task1c_skeleton.cpp(1032): warning C4018: '<' : signed/unsigned mismatch
        Link:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Ashley\Documents\GitHub\Extension-FoP-Assignment\4374_Task1c_Skeleton\Debug\Project_VS13.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\Ashley\Documents\GitHub\Extension-FoP-Assignment\4374_Task1c_Skeleton\Debug\Project_VS13.pdb" /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Ashley\Documents\GitHub\Extension-FoP-Assignment\4374_Task1c_Skeleton\Debug\Project_VS13.lib" /MACHINE:X86 Debug\4374_Task1c_Skeleton.obj
          Debug\ConsoleUtils.obj
@@ -35,4 +38,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:01.58
+Time Elapsed 00:00:01.54

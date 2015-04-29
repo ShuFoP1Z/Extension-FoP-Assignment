@@ -120,9 +120,8 @@ void playGame(string playerName)
 	void endProgram(int lives, int key, vector<Item> zombies, int pillsRemaining, string name, int highscore);
 	int getPlayerScore(string name);
 	void cheats(int& lives, vector<Item>& zombies, vector<Item>& pills, int key, bool& frozen);
-	string saveGame(const char grid[SIZEY][SIZEX], string& name, int& lives);
-	string loadGame(char grid[SIZEY][SIZEX], string& name, int lives);
-	void updateAllCoordinates(const char grid[SIZEY][SIZEX], Item& spot, vector<Item>& pills, vector<Item>& zombies, vector<Item>& holes);
+	string saveGame(const char grid[SIZEY][SIZEX], vector<Item> zombies, vector<Item> pills, vector<Item> holes, Item spot, string name, int lives);
+	string loadGame(char grid[SIZEY][SIZEX], vector<Item>& zombies, vector<Item>& pills, vector<Item>& holes, Item& spot, string& name, int& lives);
 	
 	//local variable declarations 
 	char grid[SIZEY][SIZEX];								//grid for display
@@ -145,10 +144,7 @@ void playGame(string playerName)
 	if (!checkForSaveGame(playerName))
 		initialiseGame(grid, spot, holes, pills, zombies);	//initialise grid (incl. walls and spot)
 	else
-	{
-		message = loadGame(grid, playerName, lives);
-		updateAllCoordinates(grid, spot, pills, zombies, holes);
-	}
+		message = loadGame(grid, zombies, pills, holes, spot, playerName, lives);
 
 	int key(' ');											//create key to store keyboard events
 	do {
@@ -158,15 +154,11 @@ void playGame(string playerName)
 		if (isArrowKey(key))
 			updateGame(grid, spot, holes, key, lives, message, pills, pillsRemaining, zombies, frozen);
 		if (toupper(key) == SAVE)
-			message = saveGame(grid, playerName, lives);
+			message = saveGame(grid, zombies, pills, holes, spot, playerName, lives);
 		if (toupper(key) == LOAD)
-		{
-			message = loadGame(grid, playerName, lives);
-			updateAllCoordinates(grid, spot, pills, zombies, holes);
-		}
+			message = loadGame(grid, zombies, pills, holes, spot, playerName, lives);
 		else
 			message = "          INVALID KEY!           ";	//set 'Invalid key' message
-		//cheats(lives, zombies, pills, key, frozen);			//see if there are cheats
 		if (wantToQuit(key))								//if player wants to quit
 			running = false;
 		if (outOfLives(lives))								//if player is out of lives
@@ -220,7 +212,7 @@ void initialiseGame(char grid[][SIZEX], Item& spot, vector<Item>& holes, vector<
 	setHoleInitialCoordinates(holes, grid);					//intiialise holes position
 	placeHoles(grid, holes);								//set holes in grid
 
-	setPillsInitialCoordinates(pills, grid);			//initialise pills position
+	setPillsInitialCoordinates(pills, grid);				//initialise pills position
 	placePills(grid, pills);								//set pills in grid
 } //end of initialiseGame
 
@@ -953,7 +945,7 @@ void cheats(int& lives, vector<Item>& zombies, vector<Item>& pills, int key, boo
 	}
 }
 
-string saveGame(const char grid[SIZEY][SIZEX], string& name, int& lives)
+string saveGame(const char grid[SIZEY][SIZEX], vector<Item> zombies, vector<Item> pills, vector<Item> holes, Item spot, string name, int lives)
 {
 	ofstream toFile;
 	toFile.open((name + SAVEEXTENSION), ios::out);
@@ -972,12 +964,19 @@ string saveGame(const char grid[SIZEY][SIZEX], string& name, int& lives)
 				toFile << grid[row][col];
 			}
 		}
+		toFile << " " << spot.x << " " << spot.y;
+		for (int z(0); z < zombies.size(); ++z)
+			toFile << " " << zombies[z].x << " " << zombies[z].y << " " << zombies[z].isBeingRendered;
+		for (int p(0); p < pills.size(); ++p)
+			toFile << " " << pills[p].x << " " << pills[p].y << " " << pills[p].isBeingRendered;
+		for (int h(0); h < holes.size(); ++h)
+			toFile << " " << holes[h].x << " " << holes[h].y;
 		toFile.close();
 		return("           SAVED GAME!           ");
 	}
 }
 
-string loadGame(char grid[SIZEY][SIZEX], string& name, int lives)
+string loadGame(char grid[SIZEY][SIZEX], vector<Item>& zombies, vector<Item>& pills, vector<Item>& holes, Item& spot, string& name, int& lives)
 {
 	ifstream fromFile;
 	char nextChar;
@@ -997,42 +996,14 @@ string loadGame(char grid[SIZEY][SIZEX], string& name, int lives)
 					grid[row][col] = fromFile.get();
 			}
 		}
+		fromFile >> spot.x >> spot.y;
+		for (int z(0); z < zombies.size(); ++z)
+			fromFile >> zombies[z].x >> zombies[z].y >> zombies[z].isBeingRendered;
+		for (int p(0); p < pills.size(); ++p)
+			fromFile >> pills[p].x >> pills[p].y >> pills[p].isBeingRendered;
+		for (int h(0); h < holes.size(); ++h)
+			fromFile >> holes[h].x >> holes[h].y;
 		fromFile.close();
 		return("          LOADED GAME!           ");
-	}
-}
-
-void updateAllCoordinates(const char grid[SIZEY][SIZEX], Item& spot, vector<Item>& pills, vector<Item>& zombies, vector<Item>& holes)
-{
-	int h(0), p(0), z(0);
-	for (int row(0); row < SIZEY; ++row)
-	{
-		for (int col(0); col < SIZEX; ++col)
-		{
-			switch (grid[row][col]) {
-			case SPOT:
-				spot.x = col;
-				spot.y = row;
-				break;
-			case PILL:
-				pills[p].x = col;
-				pills[p].y = row;
-				if (p < pills.size())
-					++p;
-				break;
-			case HOLE:
-				holes[h].x = col;
-				holes[h].y = row;
-				if (h < holes.size())
-					++h;
-				break;
-			case ZOMBIE:
-				zombies[z].x = col;
-				zombies[z].y = row;
-				if (z < zombies.size())
-					++z;
-				break;
-			}
-		}
 	}
 }
